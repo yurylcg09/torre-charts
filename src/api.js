@@ -1,18 +1,19 @@
-const url = "https://torre.co/api";
+//const url = "https://torre.co/api";
 
-function getOportunity(id) {
-  return fetch(`${url}/opportunities/${id}`)
-    .then(res => res.json())
+function getTestData() {
+    // Simple POST request with a JSON body using fetch
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "Vue POST Request Example" })
+    };
+    fetch("https://search.torre.co/opportunities/_search/?offset=0&size=10&aggregate=true", requestOptions)
+      //.then(res => res.json())
+      //.then(res => res.aggregators.aggregators)
+      .then(response => response.json())
+      //.then(data => console.log(data));
 }
 
-function getBio() {
-    return fetch(`https://bio.torre.co/api/bios/yurylcg`)
-    .then(response => response.text())
-    .then(contents => console.log(contents))
-    .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
-  }
-
 export default {
-  getOportunity,
-  getBio
+  getTestData
 };

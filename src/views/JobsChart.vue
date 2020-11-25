@@ -102,43 +102,61 @@
   </div>
 </template>
 
-<script>
-import api from "@/api";
-//import PxButton from '@/components/PxButton'
+// <script>
+// import api from "@/api";
+// //import PxButton from '@/components/PxButton'
 
+// export default {
+//   name: "JobsChart",
+
+//   //components: { PxButton },
+
+//   data() {
+//     return {
+//       isLoading: false,
+//       oportunity: []
+//     };
+//   },
+
+//   created() {
+//     this.getData()
+//   },
+
+//   methods: {
+//     getData() {
+//       this.isLoading = true;
+
+//       Promise.all([
+//         api.getTestData()
+//       ])
+//         .then(([oportunity]) => {
+//           //console.log(oportunity)
+//           this.oportunity = oportunity
+//         })
+//         .finally(() => (this.isLoading = false));
+//     }
+//   }
+// };
+// </script>
+
+<script>
 export default {
   name: "JobsChart",
-
-  //components: { PxButton },
-
   data() {
     return {
-      isLoading: false,
-      oportunity: {},
-      bio: {}
+      postId: null
     };
   },
-
   created() {
-    this.getData()
-  },
-
-  methods: {
-    getData() {
-      //const idJob = "PW9YNxWg";
-      //const idBio = "yurylcg";
-      this.isLoading = true;
-
-      Promise.all([
-        //api.getOportunity(idJob), 
-        api.getBio()
-      ])
-        .then(([bio]) => {
-          //this.oportunity = oportunity
-          this.bio = bio
-        })
-        .finally(() => (this.isLoading = false));
-    }
+    // Simple POST request with a JSON body using fetch
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "Vue POST Request Example" })
+    };
+    fetch("https://search.torre.co/opportunities/_search/?offset=0&size=10&aggregate=true", requestOptions)
+      .then(response => response.json())
+      .then(data => (this.postId = data));
   }
 };
 </script>
