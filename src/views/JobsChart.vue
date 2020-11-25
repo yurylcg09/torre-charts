@@ -1,10 +1,21 @@
 <template>
   <div class="flex">
+    <header class="shadow w-screen">
+    <nav>
+      <nav class="flex items-center justify-between flex-wrap bg-green-400 p-6">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+          <img src="@/assets/logo.png" class="mr-5"/>
+          <h1 class="text-xl my-10">TORRE DATA ANALYSIS</h1>
+        </div>
+      </nav>
+    </nav>
+  </header>
+
     <div class="flex justify-center">
       <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
     </div>
     <template v-if="!isLoading">
-      <h1 class="text-xl my-10">TORRE DATA ANALYSIS</h1>
+      
 
       <h3 class="text-xl my-10">Number of Jobs per Skill</h3>
       <line-chart
