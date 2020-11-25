@@ -1,11 +1,11 @@
 <template>
   <div class="flex-col">
-    <!-- <div class="flex justify-center">
+    <div class="flex justify-center">
       <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100" />
     </div>
     <template v-if="!isLoading">
       <div class="flex flex-col sm:flex-row justify-around items-center">
-        <div class="flex flex-col items-center">
+        <!-- <div class="flex flex-col items-center">
           <img
             :src="
               `https://static.coincap.io/assets/icons/BTC@2x.png`
@@ -17,9 +17,9 @@
             {{ asset.name }}
             <small class="sm:mr-2 text-gray-500">{{ asset.symbol }}</small>
           </h1>
-        </div>
+        </div> -->
 
-        <div class="my-10 flex flex-col">
+        <!-- <div class="my-10 flex flex-col">
           <ul>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Ranking</b>
@@ -46,9 +46,9 @@
               <span>{{ asset.changePercent24Hr | percent }}</span>
             </li>
           </ul>
-        </div>
+        </div> -->
 
-        <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
+        <!-- <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
           <button
             @click="toggleConverter"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -67,7 +67,7 @@
           </div>
 
           <span class="text-xl">{{ convertResult }} {{ fromUsd ? asset.symbol : 'USD' }}</span>
-        </div>
+        </div> -->
       </div>
 
       <line-chart
@@ -75,10 +75,10 @@
         :colors="['orange']"
         :min="min"
         :max="max"
-        :data="history.map(h => [h.date, parseFloat(h.priceUsd).toFixed(2)])"
+        :data="jobsData.map(jd => [jd.value, parseFloat(jd.total).toFixed(2)])"
       />
 
-      <h3 class="text-xl my-10">Mejores Ofertas de Cambio</h3>
+      <!-- <h3 class="text-xl my-10">Mejores Ofertas de Cambio</h3>
       <table>
         <tr v-for="m in markets" :key="`${m.exchangeId}-${m.priceUsd}`" class="border-b">
           <td>
@@ -97,12 +97,13 @@
             <a v-else class="hover:underline text-green-600" target="_blanck">{{ m.url }}</a>
           </td>
         </tr>
-      </table>
-    </template> -->
+      </table> -->
+    </template>
   </div>
 </template>
 
-// <script>
+//
+<script>
 // import api from "@/api";
 // //import PxButton from '@/components/PxButton'
 
@@ -137,26 +138,49 @@
 //     }
 //   }
 // };
-// </script>
+//
+</script>
 
 <script>
 export default {
   name: "JobsChart",
   data() {
     return {
-      postId: null
+      isLoading: false,
+      jobsData: null
     };
   },
+
   created() {
+    this.isLoading = true;
+
     // Simple POST request with a JSON body using fetch
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: "Vue POST Request Example" })
     };
-    fetch("https://search.torre.co/opportunities/_search/?offset=0&size=10&aggregate=true", requestOptions)
+    fetch(
+      "https://search.torre.co/opportunities/_search/?offset=0&size=10&aggregate=true",
+      requestOptions
+    )
       .then(response => response.json())
-      .then(data => (this.postId = data));
+      .then(data => (this.jobsData = data.aggregators.compensationrange))
+      .finally(() => (this.isLoading = false));
+  },
+
+  computed: {
+    min() {
+      return Math.min(
+        ...this.jobsData.map(jd => parseFloat(jd.total).toFixed(2))
+      )
+    },
+
+    max() {
+      return Math.max(
+        ...this.jobsData.map(jd => parseFloat(jd.total).toFixed(2))
+      )
+    }
   }
 };
 </script>
